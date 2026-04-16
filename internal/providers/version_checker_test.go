@@ -3,6 +3,7 @@ package providers
 import (
 	"testing"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -43,8 +44,6 @@ func TestVersionCheckResult_OutdatedLogic(t *testing.T) {
 
 // buildCheckResult replicates the version comparison logic without HTTP.
 func buildCheckResult(p Provider, latest string) VersionCheckResult {
-	vc := &VersionChecker{registry: nil}
-	_ = vc
 	res := VersionCheckResult{Provider: p, LatestVersion: latest}
 	if p.Version == "" {
 		return res
@@ -57,8 +56,10 @@ func importSemver(p Provider, latest string, res *VersionCheckResult) {
 	import_semver_inline(p.Version, latest, res)
 }
 
+// import_semver_inline checks whether the latest version satisfies the given constraint.
+// Note: semver.NewConstraint is lenient about operator spacing, but "not-a-version" style
+// strings will still correctly return an error here.
 func import_semver_inline(constraint, latest string, res *VersionCheckResult) {
-	import "github.com/Masterminds/semver/v3"
 	c, err := semver.NewConstraint(constraint)
 	if err != nil {
 		res.Error = err
