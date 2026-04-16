@@ -37,6 +37,9 @@ func TestReadTerraformConfig_Valid(t *testing.T) {
 		t.Fatal("expected aws provider in config")
 	} else if req.Source != "hashicorp/aws" {
 		t.Errorf("expected source hashicorp/aws, got %s", req.Source)
+	} else if req.Version != "~> 4.0" {
+		// Also verify the version constraint is preserved correctly
+		t.Errorf("expected version ~> 4.0, got %s", req.Version)
 	}
 }
 
@@ -53,7 +56,7 @@ func TestWriteTerraformConfig_RoundTrip(t *testing.T) {
 	cfg := &TerraformConfigFile{
 		Terraform: TerraformConfig{
 			RequiredProviders: map[string]ProviderRequirement{
-				"google": {Source: "hashicorp/google", Version: ">= 3.0"},
+				"google":  {Source: "hashicorp/google", Version: ">= 3.0"},
 				"azurerm": {Source: "hashicorp/azurerm", Version: "~> 2.99"},
 			},
 		},
@@ -74,7 +77,7 @@ func TestTerraformConfigFile_ToProviderList(t *testing.T) {
 	cfg := &TerraformConfigFile{
 		Terraform: TerraformConfig{
 			RequiredProviders: map[string]ProviderRequirement{
-				"aws": {Source: "hashicorp/aws", Version: "~> 4.0"},
+				"aws":    {Source: "hashicorp/aws", Version: "~> 4.0"},
 				"random": {Source: "hashicorp/random", Version: ">= 3.1"},
 			},
 		},
