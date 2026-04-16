@@ -38,6 +38,10 @@ func TestProviderCache_SetAndGet(t *testing.T) {
 	if got.LatestVersion != result.LatestVersion {
 		t.Errorf("expected %s, got %s", result.LatestVersion, got.LatestVersion)
 	}
+	// Also verify the Outdated flag is preserved correctly
+	if got.Outdated != result.Outdated {
+		t.Errorf("expected Outdated=%v, got %v", result.Outdated, got.Outdated)
+	}
 }
 
 func TestProviderCache_Miss(t *testing.T) {
@@ -67,6 +71,7 @@ func TestProviderCache_Expiry(t *testing.T) {
 	result := VersionCheckResult{ProviderName: "hashicorp/azurerm"}
 	_ = cache.Set("azurerm", result)
 
+	// Simulate an entry cached 25 hours ago to verify the 24h TTL is enforced
 	entry := CacheEntry{
 		Result:   result,
 		CachedAt: time.Now().Add(-25 * time.Hour),
