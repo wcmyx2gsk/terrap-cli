@@ -71,6 +71,10 @@ func TestWriteTerraformConfig_RoundTrip(t *testing.T) {
 	if len(got.Terraform.RequiredProviders) != 2 {
 		t.Errorf("expected 2 providers, got %d", len(got.Terraform.RequiredProviders))
 	}
+	// Verify individual providers survived the round-trip
+	if p, ok := got.Terraform.RequiredProviders["google"]; !ok || p.Version != ">= 3.0" {
+		t.Errorf("google provider round-trip failed: %+v", got.Terraform.RequiredProviders["google"])
+	}
 }
 
 func TestTerraformConfigFile_ToProviderList(t *testing.T) {
