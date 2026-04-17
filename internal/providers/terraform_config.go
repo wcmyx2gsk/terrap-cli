@@ -43,13 +43,14 @@ func ReadTerraformConfig(dir string) (*TerraformConfigFile, error) {
 }
 
 // WriteTerraformConfig writes the given config to .terrap.json in dir.
+// Using 0600 instead of 0644 to avoid exposing config to other users on shared systems.
 func WriteTerraformConfig(dir string, cfg *TerraformConfigFile) error {
 	path := filepath.Join(dir, ".terrap.json")
 	data, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
 		return fmt.Errorf("marshalling terrap config: %w", err)
 	}
-	if err := os.WriteFile(path, data, 0644); err != nil {
+	if err := os.WriteFile(path, data, 0600); err != nil {
 		return fmt.Errorf("writing terrap config: %w", err)
 	}
 	return nil
