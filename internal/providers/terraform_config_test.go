@@ -75,6 +75,10 @@ func TestWriteTerraformConfig_RoundTrip(t *testing.T) {
 	if p, ok := got.Terraform.RequiredProviders["google"]; !ok || p.Version != ">= 3.0" {
 		t.Errorf("google provider round-trip failed: %+v", got.Terraform.RequiredProviders["google"])
 	}
+	// Also check azurerm to be thorough
+	if p, ok := got.Terraform.RequiredProviders["azurerm"]; !ok || p.Version != "~> 2.99" {
+		t.Errorf("azurerm provider round-trip failed: %+v", got.Terraform.RequiredProviders["azurerm"])
+	}
 }
 
 func TestTerraformConfigFile_ToProviderList(t *testing.T) {
