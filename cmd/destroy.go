@@ -55,7 +55,7 @@ func deleteInitData(dir string) {
 		_ = os.Remove(path.Join(dir, ".terraform.lock.hcl"))
 		_ = os.RemoveAll(path.Join(dir, ".terraform"))
 
-		_, _ = commons.GREEN.Println("\nWorkspace removed.")
+		_, _ = commons.GREEN.Println("\nWorkspace removed successfully. You can re-initialize with `terrap init`.")
 
 	} else {
 		_, _ = commons.YELLOW.Println("The given directory is not initialized.")
@@ -69,7 +69,9 @@ var destroyCmd = &cobra.Command{
 	Short: "Destroys the given Terrap workspace",
 	// Note: added Long description for clarity when running `terrap destroy --help`
 	Long: `Destroys the given Terrap workspace by removing the .terrap.json configuration
-file and any temporary Terraform executors or files that were created during init.`,
+file and any temporary Terraform executors or files that were created during init.
+
+Note: this does NOT affect your actual Terraform state or infrastructure.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if cmd.Flag("directory").Changed {
 			deleteInitData(cmd.Flag("directory").Value.String())
