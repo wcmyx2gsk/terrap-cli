@@ -14,13 +14,15 @@ type Constraint struct {
 }
 
 // ParseConstraint parses a version constraint string like ">= 1.2.0" or "~> 2.0".
+// Operators are checked in order of length (longest first) to avoid prefix conflicts,
+// e.g. ">=" must be checked before ">".
 func ParseConstraint(raw string) (Constraint, error) {
 	raw = strings.TrimSpace(raw)
 	if raw == "" {
 		return Constraint{}, fmt.Errorf("empty constraint")
 	}
 
-	operators := []string{">=", "<=", "~>", "!=", ">", "<", "="}
+	operators := []string{"~>", ">=", "<=", "!=", ">", "<", "="}
 	for _, op := range operators {
 		if strings.HasPrefix(raw, op) {
 			ver := strings.TrimSpace(raw[len(op):])
