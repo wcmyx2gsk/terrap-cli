@@ -16,6 +16,8 @@ func TestProvider_IsValid(t *testing.T) {
 		{"missing name", Provider{Name: "", Source: "hashicorp/aws"}, false},
 		{"missing source", Provider{Name: "aws", Source: ""}, false},
 		{"whitespace name", Provider{Name: "  ", Source: "hashicorp/aws"}, false},
+		// also check whitespace-only source, similar to whitespace name case
+		{"whitespace source", Provider{Name: "aws", Source: "  "}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
