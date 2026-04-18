@@ -31,6 +31,7 @@ func runUpgrade(cmd *cobra.Command, args []string) error {
 	for _, p := range initData.Providers {
 		r, err := checker.Check(p)
 		if err != nil {
+			// Print warnings to stderr so they don't pollute JSON output
 			fmt.Fprintf(os.Stderr, "warning: could not check %s: %v\n", p.NormalizedSource(), err)
 			continue
 		}
@@ -62,7 +63,11 @@ func printUpgradeText(candidates []providers.UpgradeCandidate, hasMajor bool) er
 		fmt.Printf("  %s\n", c.String())
 	}
 	if hasMajor {
-		fmt.Println("\n⚠  One or more upgrades include a major version bump. Review breaking changes before upgrading.")
+		// Use a more visible separator before the major version warning
+		fmt.Println()
+		fmt.Println("===========================================")
+		fmt.Println("⚠  One or more upgrades include a major version bump. Review breaking changes before upgrading.")
+		fmt.Println("===========================================")
 	}
 	return nil
 }
