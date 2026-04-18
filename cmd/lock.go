@@ -67,7 +67,9 @@ func printLockText(result providers.SyncResult) {
 	for _, s := range result.Removed {
 		fmt.Printf("  - removed: %s\n", s)
 	}
-	fmt.Printf("\nSync complete: %s\n", result.String())
+	// print a blank line before the summary for readability
+	fmt.Printf("\nSync complete: %d added, %d updated, %d removed\n",
+		len(result.Added), len(result.Updated), len(result.Removed))
 }
 
 func init() {
