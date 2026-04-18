@@ -16,6 +16,8 @@ func TestParseConstraint_Valid(t *testing.T) {
 		{"!= 0.9.0", "!=", "0.9.0"},
 		{"1.0.0", "=", "1.0.0"},
 		{"< 5.0.0", "<", "5.0.0"},
+		{"> 1.0.0", ">", "1.0.0"}, // added: explicit greater-than operator
+		{"<= 4.0.0", "<=", "4.0.0"}, // added: less-than-or-equal operator
 	}
 	for _, tc := range cases {
 		c, err := ParseConstraint(tc.input)
@@ -57,6 +59,10 @@ func TestConstraint_Satisfies(t *testing.T) {
 		{"= 3.0.0", "3.0.1", false},
 		{"< 2.0.0", "1.9.9", true},
 		{"< 2.0.0", "2.0.0", false},
+		{"> 1.0.0", "1.0.1", true},  // added: strict greater-than
+		{"> 1.0.0", "1.0.0", false}, // added: boundary check for strict greater-than
+		{"<= 2.0.0", "2.0.0", true}, // added: less-than-or-equal boundary
+		{"<= 2.0.0", "2.0.1", false}, // added: exceeds less-than-or-equal boundary
 	}
 	for _, tc := range cases {
 		c, err := ParseConstraint(tc.constraint)
