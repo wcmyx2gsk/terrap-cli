@@ -18,6 +18,8 @@ func (p Provider) String() string {
 }
 
 // IsValid checks that the provider has the minimum required fields.
+// Note: Version is intentionally not required here since some providers
+// may rely on implicit version constraints defined elsewhere.
 func (p Provider) IsValid() bool {
 	return strings.TrimSpace(p.Name) != "" && strings.TrimSpace(p.Source) != ""
 }
@@ -47,4 +49,15 @@ func (pl ProviderList) Names() []string {
 		names = append(names, p.Name)
 	}
 	return names
+}
+
+// FilterValid returns only providers that pass the IsValid check.
+func (pl ProviderList) FilterValid() ProviderList {
+	valid := make(ProviderList, 0, len(pl))
+	for _, p := range pl {
+		if p.IsValid() {
+			valid = append(valid, p)
+		}
+	}
+	return valid
 }
