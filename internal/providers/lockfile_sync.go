@@ -23,6 +23,8 @@ func (r SyncResult) HasChanges() bool {
 // SyncLockFile reconciles a LockFile against a desired ProviderList.
 // Providers in desired but not in lf are added; providers present in lf
 // but absent from desired are removed; version mismatches are updated.
+// Note: iteration order over desiredMap is non-deterministic, so Added and
+// Updated slices may appear in different orders across runs.
 func SyncLockFile(lf *LockFile, desired ProviderList) SyncResult {
 	result := SyncResult{}
 
