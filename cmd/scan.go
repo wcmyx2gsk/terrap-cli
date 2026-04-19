@@ -89,12 +89,14 @@ func printScanResults(results []ScanResult, format string) error {
 		if r.UpgradeNeeded {
 			status = "⚠ upgrade available"
 		}
-		fmt.Printf("[%s] %s  current: %s  latest: %s  %s\n", r.Provider, status, r.CurrentVer, r.LatestVer, "")
+		// removed trailing empty string arg — it was just adding a trailing space
+		fmt.Printf("[%s] %s  current: %s  latest: %s\n", r.Provider, status, r.CurrentVer, r.LatestVer)
 	}
 	return nil
 }
 
 func init() {
-	scanCmd.Flags().StringVarP(&outputFormat, "output", "o", "text", "Output format: text or json")
+	// default to json since I usually pipe this into jq
+	scanCmd.Flags().StringVarP(&outputFormat, "output", "o", "json", "Output format: text or json")
 	rootCmd.AddCommand(scanCmd)
 }
