@@ -25,6 +25,7 @@ func NewVersionChecker() *VersionChecker {
 }
 
 // CheckProvider fetches the latest version and compares it to the current constraint.
+// Note: providers with no version constraint are considered up to date (not flagged).
 func (vc *VersionChecker) CheckProvider(p Provider) VersionCheckResult {
 	result := VersionCheckResult{Provider: p}
 
@@ -36,6 +37,7 @@ func (vc *VersionChecker) CheckProvider(p Provider) VersionCheckResult {
 	result.LatestVersion = latest
 
 	if p.Version == "" {
+		// No constraint specified; skip outdated check rather than assuming up to date.
 		result.IsOutdated = false
 		return result
 	}
